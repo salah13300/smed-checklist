@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-List SMED - Organes de Soufflage</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.4;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .save-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 3px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .save-btn {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+        
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+        
+        .export-btn {
+            background: linear-gradient(135deg, #007bff, #6f42c1);
+        }
+        
+        .load-btn {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+        }
+        
+        .progress-container {
+            padding: 20px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            background: #ecf0f1;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .info-bar {
+            background: #f8f9fa;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            border-bottom: 3px solid #e9ecef;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+        }
+        
+        .icon-date { background: #3498db; }
+        .icon-time { background: #e74c3c; }
+        .icon-team { background: #2ecc71; }
+        .icon-safety { background: #f39c12; }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .phase-section {
+            margin-bottom: 40px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .phase-header {
+            padding: 20px 30px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .phase-externe { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+        .phase-interne { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        
+        .phase-body {
+            background: white;
+            border: 2px solid #e9ecef;
+        }
+        
+        .time-block {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 25px;
+        }
+        
+        .time-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 5px solid;
+        }
+        
+        .time-j1 { border-left-color: #3498db; }
+        .time-h4 { border-left-color: #f39c12; }
+        .time-h2 { border-left-color: #e74c3c; }
+        .time-execution { border-left-color: #9b59b6; }
+        
+        .time-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .task-list {
+            list-style: none;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .task-item:hover {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #bdc3c7;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .checkbox:hover {
+            border-color: #3498db;
+            transform: scale(1.1);
+        }
+        
+        .checkbox.checked {
+            background: #2ecc71;
+            border-color: #2ecc71;
+        }
+        
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+        }
+        
+        .task-text {
+            flex: 1;
+        }
+        
+        .task-role {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .task-desc {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 2px;
+        }
+        
+        .task-time {
+            background: #ecf0f1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: #2c3e50;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        
+        .critical-warning {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+        }
+        
+        .warning-icon {
+            font-size: 1.5em;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+        }
+        
+        .history-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            transition: right 0.3s ease;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .history-panel.open {
+            right: 0;
+        }
+        
+        .history-header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            position: sticky;
+            top: 0;
+        }
+        
+        .history-content {
+            padding: 20px;
+        }
+        
+        .history-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .close-btn {
+            float: right;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .save-section {
+                flex-direction: column;
+            }
+            
+            .history-panel {
+                width: 100%;
+                right: -100%;
+            }
+            
+            .info-bar {
+                grid-template-columns: 1fr;
+            }
+            
+            .time-block {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 CHECK-LIST SMED</h1>
+            <p>Changement des Organes de Soufflage - Haut Fourneau</p>
+        </div>
+        
+        <div class="save-section">
+            <button class="save-btn" onclick="saveCurrentState()">
+                💾 Sauvegarder
+            </button>
+            <button class="save-btn export-btn" onclick="exportToFile()">
+                📁 Exporter
+            </button>
+            <button class="save-btn load-btn" onclick="openHistory()">
+                📋 Historique
+            </button>
+            <button class="save-btn" onclick="resetAll()">
+                🔄 Nouveau
+            </button>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-info">
+                <span>Progression</span>
+                <span id="progressText">0/20 tâches</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+        
+        <div class="info-bar">
+            <div class="info-item">
+                <div class="info-icon icon-date">📅</div>
+                <div>
+                    <strong>Date d'intervention</strong><br>
+                    <input type="date" id="dateInput" style="border:none;font-size:1em;padding:5px;">
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon icon-time">⏱️</div>
+                <div>
+                    <strong>Heure début arrêt HF</strong><br>
+                    <input type="time" id="timeInput" style="border:none;font-size:1em;padding:5px;">
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon icon-team">👥</div>
+                <div>
+                    <strong>Chef Fondeur</strong><br>
+                    <input type="text" id="chefInput" placeholder="Nom" style="border:none;font-size:1em;padding:5px;">
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon icon-safety">🛡️</div>
+                <div>
+                    <strong>Fondeurs présents</strong><br>
+                    <input type="text" id="fondeursInput" placeholder="Noms" style="border:none;font-size:1em;padding:5px;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- PHASE EXTERNE -->
+            <div class="phase-section">
+                <div class="phase-header phase-externe">
+                    <span>🟢</span>
+                    <span>PHASE EXTERNE - HF EN MARCHE</span>
+                    <span style="margin-left: auto; font-size: 0.9em;">Durée totale : 2h30</span>
+                </div>
+                <div class="phase-body">
+                    <div class="time-block">
+                        <div class="time-card time-j1">
+                            <div class="time-title">📋 J-1 : PRÉPARATION ADMINISTRATIVE</div>
+                            <ul class="task-list">
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Chef Fondeur</div>
+                                        <div class="task-desc">Vérification disponibilité pièces neuves</div>
+                                    </div>
+                                    <div class="task-time">30 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Chef Fondeur</div>
+                                        <div class="task-desc">Planification équipes et rôles</div>
+                                    </div>
+                                    <div class="task-time">15 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Fondeur</div>
+                                        <div class="task-desc">Contrôle disponibilité outillage</div>
+                                    </div>
+                                    <div class="task-time">20 min</div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="time-card time-h4">
+                            <div class="time-title">🔧 H-4 : PRÉPARATION MATÉRIELLE</div>
+                            <ul class="task-list">
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Fondeur 1</div>
+                                        <div class="task-desc">Contrôle busillon neuf (eau + réfractaire)</div>
+                                    </div>
+                                    <div class="task-time">30 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Fondeur 2</div>
+                                        <div class="task-desc">Contrôle tuyère neuve (portées + tubes)</div>
+                                    </div>
+                                    <div class="task-time">20 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Fondeur 3</div>
+                                        <div class="task-desc">Contrôle tympe neuve (état surfaces)</div>
+                                    </div>
+                                    <div class="task-time">15 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Fondeur</div>
+                                        <div class="task-desc">Préparation joints (feutre + métallo)</div>
+                                    </div>
+                                    <div class="task-time">10 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Chef Fondeur</div>
+                                        <div class="task-desc">Test outillage hydraulique (0-600 bars)</div>
+                                    </div>
+                                    <div class="task-time">30 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Fondeur</div>
+                                        <div class="task-desc">Positionnement chariots près HF</div>
+                                    </div>
+                                    <div class="task-time">15 min</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="time-block">
+                        <div class="time-card time-h2">
+                            <div class="time-title">⚡ H-2 : PRÉPARATION FINALE</div>
+                            <ul class="task-list">
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Chef Fondeur</div>
+                                        <div class="task-desc">Briefing sécurité (EPI + consignations)</div>
+                                    </div>
+                                    <div class="task-time">15 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Chef Fondeur</div>
+                                        <div class="task-desc">Attribution rôles par phase</div>
+                                    </div>
+                                    <div class="task-time">10 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Fondeur</div>
+                                        <div class="task-desc">Vérification bouclier anti-refoulement</div>
+                                    </div>
+                                    <div class="task-time">5 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Fondeur</div>
+                                        <div class="task-desc">Préparation flexibles eau/air</div>
+                                    </div>
+                                    <div class="task-time">15 min</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="critical-warning">
+                <span class="warning-icon">⚠️</span>
+                <span><strong>POINT CRITIQUE :</strong> Toutes les tâches externes DOIVENT être terminées avant l'arrêt du HF</span>
+            </div>
+            
+            <!-- PHASE INTERNE -->
+            <div class="phase-section">
+                <div class="phase-header phase-interne">
+                    <span>🔴</span>
+                    <span>PHASE INTERNE - HF À L'ARRÊT</span>
+                    <span style="margin-left: auto; font-size: 0.9em;">Durée totale : 105 min</span>
+                </div>
+                <div class="phase-body">
+                    <div class="time-block">
+                        <div class="time-card time-execution">
+                            <div class="time-title">🚀 DÉMONTAGE BUSILLON (60 min max)</div>
+                            <ul class="task-list">
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Équipe A (Chef + 2 Fondeurs)</div>
+                                        <div class="task-desc">Mise en place tirants TI/TS (A1-A3)</div>
+                                    </div>
+                                    <div class="task-time">15 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Équipe A</div>
+                                        <div class="task-desc">Dépose boulons + tendeurs (A4-A8)</div>
+                                    </div>
+                                    <div class="task-time">20 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Équipe A</div>
+                                        <div class="task-desc">Extraction busillon (A9-A11)</div>
+                                    </div>
+                                    <div class="task-time">15 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Équipe A</div>
+                                        <div class="task-desc">Nettoyage portées + préparation</div>
+                                    </div>
+                                    <div class="task-time">10 min</div>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="time-card time-execution">
+                            <div class="time-title">🔧 MONTAGE BUSILLON (45 min max)</div>
+                            <ul class="task-list">
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Équipe A+B</div>
+                                        <div class="task-desc">Contrôles + positionnement (B1-B5)</div>
+                                    </div>
+                                    <div class="task-time">15 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Équipe A</div>
+                                        <div class="task-desc">Boulonnage + ajustement (B6-B10)</div>
+                                    </div>
+                                    <div class="task-time">20 min</div>
+                                </li>
+                                <li class="task-item">
+                                    <div class="checkbox" onclick="toggleCheck(this)"></div>
+                                    <div class="task-text">
+                                        <div class="task-role">Équipe B</div>
+                                        <div class="task-desc">Raccordements + tests (B11-B15)</div>
+                                    </div>
+                                    <div class="task-time">10 min</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="critical-warning">
+                        <span class="warning-icon">🚨</span>
+                        <span><strong>ATTENTION :</strong> Travail en parallèle obligatoire - Équipe B prépare pendant que équipe A démonte</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>✅ Intervention terminée - Heure fin :</strong> <input type="time" id="endTimeInput" style="background:transparent;border:1px solid white;color:white;padding:5px;"> 
+            <strong>| Durée totale :</strong> <span id="totalDuration">_____ min</span> | <strong>Signature Chef Fondeur :</strong> _________________</p>
+        </div>
+    </div>
+
+    <!-- Panneau Historique -->
+    <div class="history-panel" id="historyPanel">
+        <div class="history-header">
+            <h3>📋 Historique SMED</h3>
+            <button class="close-btn" onclick="closeHistory()">×</button>
+        </div>
+        <div class="history-content" id="historyContent">
+            <!-- Historique sera chargé ici -->
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentData = {};
+        
+        // Fonction de base pour toggle checkbox
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+            updateProgress();
+            autoSave();
+        }
+        
+        // Mise à jour de la barre de progression
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            const checkedBoxes = document.querySelectorAll('.checkbox.checked');
+            const progress = (checkedBoxes.length / checkboxes.length) * 100;
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            progressBar.style.width = progress + '%';
+            progressText.textContent = `${checkedBoxes.length}/${checkboxes.length} tâches`;
+        }
+        
+        // Sauvegarde automatique
+        function autoSave() {
+            const data = getCurrentData();
+            localStorage.setItem('smed_current', JSON.stringify(data));
+        }
+        
+        // Récupération des données actuelles
+        function getCurrentData() {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            const checkedStates = Array.from(checkboxes).map(cb => cb.classList.contains('checked'));
+            
+            return {
+                id: Date.now(),
+                date: document.getElementById('dateInput').value || new Date().toISOString().split('T')[0],
+                startTime: document.getElementById('timeInput').value,
+                endTime: document.getElementById('endTimeInput').value,
+                chef: document.getElementById('chefInput').value,
+                fondeurs: document.getElementById('fondeursInput').value,
+                checkboxes: checkedStates,
+                completed: checkedStates.filter(Boolean).length,
+                total: checkedStates.length,
+                timestamp: new Date().toISOString()
+            };
+        }
+        
+        // Sauvegarde manuelle
+        function saveCurrentState() {
+            const data = getCurrentData();
+            const savedInterventions = JSON.parse(localStorage.getItem('smed_interventions')) || [];
+            
+            // Ajouter la nouvelle intervention
+            savedInterventions.push(data);
+            localStorage.setItem('smed_interventions', JSON.stringify(savedInterventions));
+            
+            // Message de confirmation
+            showNotification('✅ Intervention sauvegardée !', 'success');
+        }
+        
+        // Export vers fichier
+        function exportToFile() {
+            const data = getCurrentData();
+            
+            // Créer le contenu du fichier
+            const content = `SMED Check-List - Intervention du ${data.date}
+            
+=== INFORMATIONS ===
+Date: ${data.date}
+Heure début: ${data.startTime}
+Heure fin: ${data.endTime}
+Chef Fondeur: ${data.chef}
+Fondeurs: ${data.fondeurs}
+Progression: ${data.completed}/${data.total} tâches
+
+=== DONNÉES BRUTES ===
+${JSON.stringify(data, null, 2)}
+`;
+            
+            // Télécharger le fichier
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SMED_${data.date}_${data.startTime}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('📁 Fichier exporté !', 'info');
+        }
+        
+        // Ouvrir l'historique
+        function openHistory() {
+            const historyPanel = document.getElementById('historyPanel');
+            const historyContent = document.getElementById('historyContent');
+            
+            // Charger les interventions
+            const savedInterventions = JSON.parse(localStorage.getItem('smed_interventions')) || [];
+            
+            if (savedInterventions.length === 0) {
+                historyContent.innerHTML = '<p>Aucune intervention sauvegardée</p>';
+            } else {
+                historyContent.innerHTML = savedInterventions
+                    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                    .map(intervention => `
+                        <div class="history-item">
+                            <h4>📅 ${intervention.date} à ${intervention.startTime}</h4>
+                            <p><strong>Chef:</strong> ${intervention.chef}</p>
+                            <p><strong>Progression:</strong> ${intervention.completed}/${intervention.total} tâches</p>
+                            <button onclick="loadIntervention(${intervention.id})" style="background:#3498db;color:white;border:none;padding:8px 16px;border-radius:4px;margin-top:10px;cursor:pointer;">
+                                📋 Charger
+                            </button>
+                            <button onclick="deleteIntervention(${intervention.id})" style="background:#e74c3c;color:white;border:none;padding:8px 16px;border-radius:4px;margin-top:10px;margin-left:10px;cursor:pointer;">
+                                🗑️ Supprimer
+                            </button>
+                        </div>
+                    `).join('');
+            }
+            
+            historyPanel.classList.add('open');
+        }
+        
+        // Fermer l'historique
+        function closeHistory() {
+            document.getElementById('historyPanel').classList.remove('open');
+        }
+        
+        // Charger une intervention
+        function loadIntervention(id) {
+            const savedInterventions = JSON.parse(localStorage.getItem('smed_interventions')) || [];
+            const intervention = savedInterventions.find(i => i.id === id);
+            
+            if (intervention) {
+                // Charger les données dans les champs
+                document.getElementById('dateInput').value = intervention.date;
+                document.getElementById('timeInput').value = intervention.startTime;
+                document.getElementById('endTimeInput').value = intervention.endTime || '';
+                document.getElementById('chefInput').value = intervention.chef;
+                document.getElementById('fondeursInput').value = intervention.fondeurs;
+                
+                // Charger les checkboxes
+                const checkboxes = document.querySelectorAll('.checkbox');
+                intervention.checkboxes.forEach((isChecked, index) => {
+                    if (checkboxes[index]) {
+                        if (isChecked) {
+                            checkboxes[index].classList.add('checked');
+                        } else {
+                            checkboxes[index].classList.remove('checked');
+                        }
+                    }
+                });
+                
+                updateProgress();
+                closeHistory();
+                showNotification('📋 Intervention chargée !', 'info');
+            }
+        }
+        
+        // Supprimer une intervention
+        function deleteIntervention(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette intervention ?')) {
+                const savedInterventions = JSON.parse(localStorage.getItem('smed_interventions')) || [];
+                const filteredInterventions = savedInterventions.filter(i => i.id !== id);
+                localStorage.setItem('smed_interventions', JSON.stringify(filteredInterventions));
+                openHistory(); // Recharger l'historique
+                showNotification('🗑️ Intervention supprimée !', 'warning');
+            }
+        }
+        
+        // Réinitialiser tout
+        function resetAll() {
+            if (confirm('Êtes-vous sûr de vouloir commencer une nouvelle intervention ?')) {
+                // Vider tous les champs
+                document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+                document.getElementById('timeInput').value = '';
+                document.getElementById('endTimeInput').value = '';
+                document.getElementById('chefInput').value = '';
+                document.getElementById('fondeursInput').value = '';
+                
+                // Décocher toutes les cases
+                const checkboxes = document.querySelectorAll('.checkbox');
+                checkboxes.forEach(cb => cb.classList.remove('checked'));
+                
+                updateProgress();
+                autoSave();
+                showNotification('🔄 Nouvelle intervention démarrée !', 'info');
+            }
+        }
+        
+        // Calculer la durée
+        function calculateDuration() {
+            const startTime = document.getElementById('timeInput').value;
+            const endTime = document.getElementById('endTimeInput').value;
+            
+            if (startTime && endTime) {
+                const start = new Date(`2000-01-01T${startTime}`);
+                const end = new Date(`2000-01-01T${endTime}`);
+                const diffMs = end - start;
+                const diffMins = Math.round(diffMs / 60000);
+                
+                document.getElementById('totalDuration').textContent = `${diffMins} min`;
+                return diffMins;
+            }
+            return null;
+        }
+        
+        // Afficher une notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 8px;
+                color: white;
+                font-weight: bold;
+                z-index: 9999;
+                animation: slideIn 0.3s ease;
+                ${type === 'success' ? 'background: #2ecc71;' : ''}
+                ${type === 'warning' ? 'background: #f39c12;' : ''}
+                ${type === 'error' ? 'background: #e74c3c;' : ''}
+                ${type === 'info' ? 'background: #3498db;' : ''}
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => document.body.removeChild(notification), 300);
+            }, 3000);
+        }
+        
+        // Charger les données sauvegardées au démarrage
+        function loadSavedData() {
+            const savedData = localStorage.getItem('smed_current');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                
+                // Charger les champs
+                document.getElementById('dateInput').value = data.date || new Date().toISOString().split('T')[0];
+                document.getElementById('timeInput').value = data.startTime || '';
+                document.getElementById('endTimeInput').value = data.endTime || '';
+                document.getElementById('chefInput').value = data.chef || '';
+                document.getElementById('fondeursInput').value = data.fondeurs || '';
+                
+                // Charger les checkboxes
+                if (data.checkboxes) {
+                    const checkboxes = document.querySelectorAll('.checkbox');
+                    data.checkboxes.forEach((isChecked, index) => {
+                        if (checkboxes[index] && isChecked) {
+                            checkboxes[index].classList.add('checked');
+                        }
+                    });
+                }
+            } else {
+                // Première utilisation : définir la date du jour
+                document.getElementById('dateInput').value = new Date().toISOString().split('T')[0];
+            }
+            
+            updateProgress();
+        }
+        
+        // Sauvegarder quand on change les champs
+        function setupAutoSave() {
+            const inputs = ['dateInput', 'timeInput', 'endTimeInput', 'chefInput', 'fondeursInput'];
+            inputs.forEach(inputId => {
+                const element = document.getElementById(inputId);
+                if (element) {
+                    element.addEventListener('input', autoSave);
+                    if (inputId === 'endTimeInput') {
+                        element.addEventListener('input', calculateDuration);
+                    }
+                }
+            });
+        }
+        
+        // Installation PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Afficher bouton d'installation
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '📱 Installer sur tablette';
+            installBtn.className = 'save-btn';
+            installBtn.onclick = installApp;
+            document.querySelector('.save-section').appendChild(installBtn);
+        });
+        
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showNotification('📱 App installée !', 'success');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+        
+        // Animation CSS pour les notifications
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialisation au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            setupAutoSave();
+            
+            // Message de bienvenue
+            setTimeout(() => {
+                showNotification('🔥 Check-List SMED prête !', 'info');
+            }, 1000);
+        });
+        
+        // Sauvegarder avant fermeture
+        window.addEventListener('beforeunload', autoSave);
+    </script>
+</body>
+</html>
